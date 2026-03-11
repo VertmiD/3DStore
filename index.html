@@ -1,135 +1,76 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="he">
 <head>
 <meta charset="UTF-8">
-<title>Credit Card Scanner Pro</title>
-
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+<title>חיפוש לפי מספר סידורי</title>
 
 <style>
-
 body{
-font-family:Arial;
-text-align:center;
-background:#eef3f9;
-padding:30px;
+    font-family: Arial;
+    text-align:center;
+    direction: rtl;
+    background:#f4f4f4;
+    margin-top:100px;
 }
 
-video,canvas{
-width:320px;
-border-radius:12px;
-margin-top:15px;
+input{
+    padding:10px;
+    font-size:16px;
 }
 
 button{
-padding:12px 25px;
-font-size:18px;
-margin-top:10px;
-cursor:pointer;
+    padding:10px 20px;
+    font-size:16px;
+    cursor:pointer;
 }
 
 #result{
-margin-top:20px;
-font-size:22px;
-font-weight:bold;
-white-space:pre-line;
+    margin-top:20px;
+    font-size:20px;
+    font-weight:bold;
 }
-
 </style>
-
 </head>
 
 <body>
 
-<h2>סורק כרטיס אשראי</h2>
+<h2>חיפוש שם לפי מספר סידורי</h2>
 
-<video id="video" autoplay></video>
-
-<br>
-
-<button onclick="scanCard()">סרוק כרטיס</button>
-
-<canvas id="canvas"></canvas>
+<input id="serialInput" placeholder="הכנס מספר סידורי">
+<button onclick="searchSerial()">חפש</button>
 
 <div id="result"></div>
 
 <script>
 
-const video = document.getElementById("video");
+// כאן אתה מגדיר את ה"מסד נתונים"
+const database = [
+    {name: "עמית", serial: "219015"},
+    {name: "איתי", serial: "54321"},
+    {name: "רון", serial: "77665544332211"},
+    {name: "אריאל", serial: "9090"}
+    {name: "דניאל", serial: "200734"}
+    {name: "שני", serial: "4404382"}
+    {name: "יובל", serial: "123456"}
+];
 
-navigator.mediaDevices.getUserMedia({video:true})
-.then(stream=>{
-video.srcObject = stream;
-});
+function searchSerial(){
 
-function detectCardType(number){
+    const input = document.getElementById("serialInput").value;
+    const result = document.getElementById("result");
 
-if(/^4/.test(number)) return "Visa";
+    const found = database.find(item => item.serial === input);
 
-if(/^(5[1-5]|2[2-7])/.test(number)) return "MasterCard";
-
-if(/^3[47]/.test(number)) return "American Express";
-
-if(/^6/.test(number)) return "Discover";
-
-return "לא זוהה";
-
-}
-
-function luhnCheck(num){
-
-let arr = (num + '')
-.split('')
-.reverse()
-.map(x => parseInt(x));
-
-let sum = arr.reduce((acc,val,i)=>{
-
-if(i%2){
-
-val*=2;
-
-if(val>9) val-=9;
-
-}
-
-return acc+val;
-
-},0);
-
-return sum%10===0;
-
-}
-
-function scanCard(){
-
-let canvas=document.getElementById("canvas");
-let ctx=canvas.getContext("2d");
-
-canvas.width=video.videoWidth;
-canvas.height=video.videoHeight;
-
-ctx.drawImage(video,0,0);
-
-Tesseract.recognize(canvas,'eng')
-.then(({data:{text}})=>{
-
-let numbers=text.replace(/[^0-9]/g,'');
-
-let cardType=detectCardType(numbers);
-
-let valid=luhnCheck(numbers);
-
-document.getElementById("result").innerText=
-"מספר שזוהה: "+numbers+
-"\nסוג כרטיס: "+cardType+
-"\nבדיקה: "+(valid ? "מספר תקין" : "מספר לא תקין");
-
-});
+    if(found){
+        result.innerText = "השם הוא: " + found.name;
+    }else{
+        result.innerText = "לא נמצא מספר סידורי";
+    }
 
 }
 
 </script>
 
 </body>
+
 </html>
