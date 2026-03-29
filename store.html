@@ -52,7 +52,24 @@
   font-size: 16px;
   margin-top: 5px;
 }
+  .home-button {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 22px;
+    padding: 10px 14px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    transition: 0.2s;
+  }
 
+  .home-button:hover {
+    background-color: #45a049;
+    transform: scale(1.1);
+  }
   </style>
 </head>
 <body><header>
@@ -105,5 +122,7 @@
     <img src="Clicker_Salmon.jpeg" alt="קליפס לכבלים">
     <div class="product-name">קליקר ניגרי סלמון</div>
     <div class="price">₪ 5</div>
-  </div></section></body>
+  </div></section>
+<div class="home-button" onclick="goHome()">🏠</div>
+</body>
 </html>
