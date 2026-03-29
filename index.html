@@ -33,6 +33,14 @@ button{
 </head>
 
 <body>
+<script>
+  const password = "1234"; // הסיסמה שלך
+  let userInput = prompt("הכנס סיסמה כדי להיכנס:");
+
+  if (userInput !== password) {
+    document.body.innerHTML = "<h1>גישה נדחתה</h1>";
+  }
+</script>
 <img src="3DStore_Logo.jpg" alt="Logo" style="width:200px; margin-bottom:20px;">
 <h2>ברוכים הבאים לחנות שלנו</h2>
 
