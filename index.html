@@ -1,92 +1,88 @@
 <!DOCTYPE html>
 <html lang="he">
 <head>
-<meta charset="UTF-8">
-<title>החנות של עמית, רון ואיתי</title>
-
-<style>
-body{
-    font-family: Arial;
-    text-align:center;
-    direction: rtl;
-    background:#f4f4f4;
-    margin-top:100px;
-}
-
-input{
-    padding:10px;
-    font-size:16px;
-}
-
-button{
-    padding:10px 20px;
-    font-size:16px;
-    cursor:pointer;
-}
-
-#result{
-    margin-top:20px;
-    font-size:20px;
-    font-weight:bold;
-}
-</style>
-</head>
-
-<body>
-<script>
-  const password = "1234"; // הסיסמה שלך
-  let userInput = prompt("הכנס סיסמה כדי להיכנס:");
-
-  if (userInput !== password) {
-        window.location.href = "denied.html"; // דף שגיאה
-  }
-</script>
-<img src="3DStore_Logo.jpg" alt="Logo" style="width:200px; margin-bottom:20px;">
-<h2>ברוכים הבאים לחנות שלנו</h2>
-
-<input id="serialInput" placeholder="הכנס מספר כרטיס">
-<button onclick="searchSerial()">חפש</button>
-
-<div id="result"></div>
-
-<script>
-
-const database = [
-    {name: "עמית -10% הנחה", serial: "219015"},
-    {name: "איתי -10% הנחה", serial: "81510"},
-    {name: "ינאי - 5% הנחה", serial: "1122 3344 5577 66"},
-    {name: "ליה - 5% הנחה", serial: "2233 4455 6688 77"},
-    {name: "אריאל - 5% הנחה", serial: "9090"}
-];
-    
-
-function searchSerial(){
-
-    const input = document.getElementById("serialInput").value;
-    const result = document.getElementById("result");
-
-    const found = database.find(item => item.serial === input);
-
-    if(found){
-        result.innerText = "השם הוא: " + found.name;
-    }else{
-        result.innerText = "לא נמצא מספר סידורי";
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>חנות 3D</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #111;
+      color: #fff;
+      text-align: center;
     }
 
-}
+    h1 {
+      margin-top: 40px;
+      font-size: 36px;
+    }
 
-</script>
+    .main-image {
+      margin: 30px auto;
+      max-width: 90%;
+      border-radius: 16px;
+    }
+
+    .buttons {
+      margin: 20px;
+    }
+
+    .buttons button {
+      margin: 10px;
+      padding: 12px 25px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      transition: 0.2s;
+    }
+
+    .buttons button:hover {
+      background-color: #45a049;
+    }
+
+    .whatsapp {
+      margin-top: 30px;
+      display: block;
+      color: #25D366;
+      font-size: 18px;
+      text-decoration: none;
+    }
+
+    .whatsapp:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>ברוכים הבאים לחנות ה-3D של עמית ואיתי</h1>
+
+  <!-- החלף את הנתיב לתמונה שלך -->
+  <img src="3DStore_Logo.jpg" alt="תמונה ראשית" class="main-image">
+
+  <div class="buttons">
+    <button onclick="goLogin()">להתחבר</button>
+    <button onclick="goStore()">מחירון</button>
+  </div>
+
+  <!-- החלף לקישור לקבוצת הוואטסאפ שלך -->
+  <a class="whatsapp" href="https://chat.whatsapp.com/your-link" target="_blank">
+    להצטרפות לקבוצת WhatsApp
+  </a>
+
+  <script>
+    function goLogin() {
+      window.location.href = "login.html"; // צור עמוד התחברות אם צריך
+    }
+
+    function goStore() {
+      window.location.href = "store.html";
+    }
+  </script>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
