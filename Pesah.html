@@ -2,38 +2,178 @@
 <html lang="he">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>חידות לפסח 🐣</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             text-align: center;
-            background: linear-gradient(to bottom, #fff8dc, #ffd700);
+            /* הגדרות רקע מתקדמות */
+            background: linear-gradient(rgba(255, 248, 220, 0.8), rgba(255, 215, 0, 0.8)), 
+                        url('https://images.unsplash.com/photo-1585651333185-30043818617b?q=80&w=2070&auto=format&fit=crop'); /* דוגמה לרקע אווירתי */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            
             direction: rtl;
-            margin-top: 50px;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         h1 {
             color: #8B0000;
+            text-shadow: 1px 1px 2px white;
+            margin-bottom: 20px;
         }
 
         .quiz-box {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            width: 350px;
-            margin: auto;
-            box-shadow: 0 0 15px rgba(0,0,0,0.2);
-            min-height: 200px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%; /* מתאים לנייד */
+            max-width: 400px; /* מגביל רוחב במחשב */
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            min-height: 250px;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        #answers {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
         }
 
         button {
-            margin: 8px;
-            padding: 12px;
-            border-radius: 10px;
-            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            background: #ffcc00;
+            font-size: 18px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #ffa500;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        #score {
+            margin-top: 20px;
+            color: #444;
+            font-size: 1.2em;
+        }
+
+        /* התאמות למסכים קטנים מאוד */
+        @media (max-width: 480px) {
+            h1 { font-size: 1.5em; }
+            .quiz-box { padding: 20px; }
+            button { font-size: 16px; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>🎉 חידון פסח החגיגי 🎉</h1>
+
+    <div class="quiz-box" id="main-container">
+        <div id="start-screen">
+            <h2>מוכנים להתחיל? 🍷</h2>
+            <p>לחצו על הכפתור כדי להפעיל את המוזיקה והחידון</p>
+            <button onclick="startGame()" style="width: 100%;">התחל משחק 🎵</button>
+        </div>
+        
+        <div id="quiz-content" style="display: none;">
+            <h2 id="question">טוען שאלה...</h2>
+            <div id="answers"></div>
+            <h3 id="score">ניקוד: 0</h3>
+        </div>
+    </div>
+
+    <audio id="music" loop>
+        <source src="https://www.prog.co.il/attachments/02-%D7%A2%D7%91%D7%93%D7%99%D7%9D-%D7%94%D7%99%D7%99%D7%A0%D7%95-mp3.632131/" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const questions = [
+            { q: "מה אוכלים בפסח?", a: ["פיתה", "מצה", "לחמניה", "פסטה"], correct: 1 },
+            { q: "איך נקרא ערב חג הפסח?", a: ["סעודת חג", "ליל הסדר", "מסיבת פסח", "לילה לבן"], correct: 1 },
+            { q: "כמה מכות היו במצרים?", a: ["5", "7", "10", "12"], correct: 2 },
+            { q: "מה שותים בליל הסדר?", a: ["מים", "מיץ תפוזים", "4 כוסות יין", "קולה"], correct: 2 },
+            { q: "מה הפירוש של המילה אפיקומן?", a: ["עוגיה", "קינוח", "הפתעה", "עוגה"], correct: 1 },
+            { q: "באיזה חודש יצאו בני ישראל ממצרים?", a: ["ניסן", "שבט", "תמוז", "אלול"], correct: 0 },
+            { q: "מה היא המכה האחרונה?", a: ["דם", "כינים", "מכת הבכורות", "חושך"], correct: 2 },
+            { q: "מה יוצא דופן?", a: ["דם", "צפרדע", "כינים", "מצה"], correct: 3 }
+        ];
+
+        let current = 0;
+        let score = 0;
+
+        function startGame() {
+            const audio = document.getElementById("music");
+            audio.play().catch(e => console.log("הפעלה נחסמה, דרושה אינטראקציה"));
+
+            document.getElementById("start-screen").style.display = "none";
+            document.getElementById("quiz-content").style.display = "block";
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const q = questions[current];
+            document.getElementById("question").innerText = q.q;
+            const answersDiv = document.getElementById("answers");
+            answersDiv.innerHTML = "";
+
+            q.a.forEach((ans, index) => {
+                const btn = document.createElement("button");
+                btn.innerText = ans;
+                btn.onclick = () => checkAnswer(index);
+                answersDiv.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(index) {
+            if(index === questions[current].correct) {
+                score++;
+                alert("נכון! 🎉");
+            } else {
+                alert("לא נכון 😅");
+            }
+
+            current++;
+
+            if(current < questions.length) {
+                loadQuestion();
+            } else {
+                document.getElementById("quiz-content").innerHTML =
+                    "<h2>כל הכבוד! 🎉</h2>" +
+                    "<h3>סיימת את החידון</h3>" +
+                    "<p style='font-size: 1.5em;'>הניקוד שלך: <strong>" + score + " מתוך " + questions.length + "</strong></p>" +
+                    "<button onclick='location.reload()' style='width: 100%;'>שחק שוב</button>";
+            }
+
+            document.getElementById("score").innerText = "ניקוד: " + score;
+        }
+    </script>
+
+</body>
+</html>
             cursor: pointer;
             background: #ffcc00;
             font-size: 16px;
